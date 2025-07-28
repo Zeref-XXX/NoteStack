@@ -9,7 +9,7 @@ const action = require('./Routes/Actions');
 
 // ✅ Proper CORS setup
 const allowedOrigins = [
-  "http://localhost:1234",            // your dev frontend
+  "*",            // your dev frontend
   "https://note-stack.vercel.app"     // your deployed frontend
 ];
 
@@ -20,10 +20,8 @@ app.use(cors({
     } else {
       callback(new Error("Not allowed by CORS"));
     }
-  },
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"]
+  }, 
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
 }));
 
 // ✅ Handle preflight requests
