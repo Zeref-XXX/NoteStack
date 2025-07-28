@@ -1,0 +1,11 @@
+# Ignore all node_modules folders
+**/node_modules/
+
+# Ignore all .parcel-cache folders
+**/.parcel-cache/
+
+# Ignore all dist folders
+**/dist/
+.env
+./package-lock.json
+
