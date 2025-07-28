@@ -1,30 +1,43 @@
 const express = require('express')
 const app = express()
 require('dotenv').config();
-require('./models/db');
 const bodyparser = require('body-parser')
 const cors = require('cors')
 const AuthRouter = require('./Routes/AuthRouter') 
-const action=require('./Routes/Actions');
+const action = require('./Routes/Actions');
 
-// app.use(
-//   cors({
-//     origin: "*", // Your frontend URL
-//   })
-// );
-const corsOptions = {
-  origin: ['http://localhost:1234', 'https://your-production-frontend.com'],
+const allowedOrigins = ['http://localhost:1234', 'https://your-production-frontend.com'];
+
+// Handle preflight requests for all routes
+app.options('*', cors({
+  origin: function (origin, callback) {
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'X-Requested-With'],
-  credentials: true,
-  optionsSuccessStatus: 200 // For legacy browser support
+  credentials: true
+}));
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'X-Requested-With'],
+  credentials: true
 };
 
 app.use(cors(corsOptions));
 
-
 const PORT = process.env.PORT || 4000;
-
 app.use(bodyparser.json());
 
 app.get('/', (req, res) => {
@@ -32,8 +45,8 @@ app.get('/', (req, res) => {
 })
 
 app.use('/auth', AuthRouter); 
-app.use('/action',action);
+app.use('/action', action);
 
 app.listen(PORT, () => {
-    console.log(" listning at  ", PORT)
+    console.log(" listening at ", PORT)
 })
