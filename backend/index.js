@@ -15,10 +15,11 @@ const action=require('./Routes/Actions');
 // app.use(cors());
 app.use(
   cors({
-    origin: "*", // Your frontend URL  ,
-    credentials:true
+    origin: "*", // Your frontend URL
   })
 );
+
+
 
 const PORT = process.env.PORT || 4000;
 
