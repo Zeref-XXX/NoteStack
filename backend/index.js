@@ -12,18 +12,15 @@ const action=require('./Routes/Actions');
 //     origin: "*", // Your frontend URL
 //   })
 // );
-
-const allowedOrigins = ['http://localhost:1234', 'https://your-production-frontend.com'];
 const corsOptions = {
-  origin: function (origin, callback) {
-    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  }
+  origin: ['http://localhost:1234', 'https://your-production-frontend.com'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'X-Requested-With'],
+  credentials: true,
+  optionsSuccessStatus: 200 // For legacy browser support
 };
-app.use(cors(corsOptions));  
+
+app.use(cors(corsOptions));
 
 
 const PORT = process.env.PORT || 4000;
