@@ -17,7 +17,9 @@ if (process.env.FRONTEND_URL) {
 const corsOptions = {
   origin: allowedOrigins,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'X-Requested-With'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'X-Requested-With',
+    '*'
+  ],
   credentials: true,
   optionsSuccessStatus: 200 // For legacy browser support
 };
