@@ -7,14 +7,23 @@ const cors = require('cors')
 const AuthRouter = require('./Routes/AuthRouter') 
 const action=require('./Routes/Actions');
 
+// app.use(
+//   cors({
+//     origin: "*", // Your frontend URL
+//   })
+// );
 
-
-app.use(
-  cors({
-    origin: "*", // Your frontend URL
-  })
-);
-
+const allowedOrigins = ['http://localhost:1234', 'https://your-production-frontend.com'];
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  }
+};
+app.use(cors(corsOptions));  
 
 
 const PORT = process.env.PORT || 4000;
