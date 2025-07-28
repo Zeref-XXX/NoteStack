@@ -3,6 +3,10 @@ import Header from './Header';
 import { FaUser, FaEnvelope, FaPhone, FaCalendarAlt, FaEdit, FaFilePdf } from "react-icons/fa";
 import { handleError, handleResponse } from "../utils"; 
 
+
+const API_BASE_URL = process.env.BACKEND;
+ 
+
 const UserProfile = () => {
   const [user, setUser] = useState(null);
   const [notes, setNotes] = useState([]);
@@ -15,7 +19,7 @@ const UserProfile = () => {
         const userId = localStorage.getItem('id');
         
         // Fetch user profile
-        const userResponse = await fetch('http://localhost:8080/auth/user', {
+        const userResponse = await fetch(`${API_BASE_URL}/auth/user`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -29,7 +33,7 @@ const UserProfile = () => {
         setUser(userData.data);
 
         // Fetch user's notes
-        const notesResponse = await fetch('http://localhost:8080/action/card', {
+        const notesResponse = await fetch(`${API_BASE_URL}/action/card`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

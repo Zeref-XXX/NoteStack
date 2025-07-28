@@ -1,4 +1,3 @@
-// src/components/LandingPage.jsx
 import React from "react";
 
 export default function HomePage() {

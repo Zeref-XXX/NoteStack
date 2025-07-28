@@ -5,9 +5,9 @@ import { ClipLoader } from "react-spinners";
 
 
 const API_BASE_URL = process.env.BACKEND;
- 
 
 const API_URL = `${API_BASE_URL}/action/find`;
+ 
 
 export default function StudyMaterialHome() {
   const [loading, setLoading] = useState(true);

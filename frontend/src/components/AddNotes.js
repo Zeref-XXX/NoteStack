@@ -3,8 +3,7 @@ import Header from "./Header";
 import PDFUploader from '../Utility/Utils';
 import { useNavigate } from "react-router"; 
 
-// It's best practice to store URLs in environment variables
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || "https://note-stack-2e64.vercel.app/";
+const BACKEND_URL =  process.env.BACKEND;
 
 // Define an initial state for the form to easily reset it
 const initialFormState = {
@@ -109,7 +108,7 @@ export default function AddNotes({ notes, setNotes }) {
       document.getElementById('file-input').value = null; // Reset file input
 
     } catch (err) {
-      console.error("Error adding note:", err);
+      console.log("Error adding note:", err);
       alert(err.message || "An unexpected error occurred.");
     } finally {
       setIsUploading(false);
