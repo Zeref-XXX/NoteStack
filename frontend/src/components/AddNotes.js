@@ -5,7 +5,7 @@ import { useNavigate } from "react-router";
 
 const BACKEND_URL =  process.env.BACKEND;
 
-// Define an initial state for the form to easily reset it
+
 const initialFormState = {
   title: "",
   code: "",

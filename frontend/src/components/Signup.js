@@ -1,66 +1,116 @@
-import { Link, Navigate, useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useState } from "react";
 import { handleError, handleSuccess } from "../utils";
 import { ToastContainer } from "react-toastify";
 import Header from './Header';
 
-
-
-const API_BASE_URL = process.env.BACKEND;
-
-const furl = `${API_BASE_URL}/auth/signup`;
+const API_BASE_URL = "http://localhost:3000";
 
 export default function Signup() {
   const [signupInfo, setSignupInfo] = useState({
     name: "",
-    email: "",
+    rollNo: "",
     password: "",
+    confirmPassword: "",
+    otp: ""
   });
-
+  
+  const [otpSent, setOtpSent] = useState(false);
+  const [otpVerified, setOtpVerified] = useState(false);
   const navigate = useNavigate();
 
-
-  const handleSignup = async (e) => {
-    e.preventDefault();
-    const { name, email, password } = signupInfo;
-    if (!name || !email || !password) {
-      return handleError("name, email and password are required");
+  // Send OTP
+  const sendOTP = async () => {
+    const { name, rollNo, password, confirmPassword } = signupInfo;
+    
+    if (!name || !rollNo || !password || !confirmPassword) {
+      return handleError("All fields are required before sending OTP");
+    }
+    if (password !== confirmPassword) {
+      return handleError("Passwords do not match");
     }
 
     try {
-      const url = furl;
-      const response = await fetch(url, {
+      const response = await fetch(`${API_BASE_URL}/auth/send-otp`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(signupInfo),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, rollNo, password })
       });
+      
       const result = await response.json();
-      const { success, message, error } = result;
-
-      if (success) {
-        handleSuccess(message);
-        setTimeout(() => {
-          navigate('/login')
-        }, 1000)
-      } else if (error) {
-        const details = error?.details[0].message;
-        handleError(details)
-      } else if (!success) {
-        handleError(message)
+      if (result.success) {
+        setOtpSent(true);
+        handleSuccess("OTP sent successfully");
+      } else {
+        handleError(result.message || "Failed to send OTP");
       }
-
-    } catch (error) {
-      handleError(error);
+    } catch (err) {
+      handleError("Error sending OTP");
     }
   };
 
+  // Verify OTP
+  const verifyOTP = async () => {
+    const { rollNo, otp } = signupInfo;
+    if (!otp) return handleError("Please enter OTP");
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/auth/verify-otp`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ rollNo, otp })
+      });
+      
+      const result = await response.json();
+      if (result.success) {
+        setOtpVerified(true);
+        handleSuccess("OTP verified successfully");
+      } else {
+        handleError(result.message || "Invalid OTP");
+      }
+    } catch (err) {
+      handleError("Error verifying OTP");
+    }
+  };
+
+  // Final Signup
+const handleSignup = async (e) => {
+  e.preventDefault();
+  const { name, rollNo, password, confirmPassword } = signupInfo;
+
+  if (!name || !rollNo || !password || !confirmPassword) {
+    return handleError("All fields are required");
+  }
+  if (password !== confirmPassword) {
+    return handleError("Passwords do not match");
+  }
+  if (!otpVerified) {
+    return handleError("Please verify your OTP first");
+  }
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/auth/signup`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, rollNo, password })
+    });
+
+    const result = await response.json();
+    if (result.success) {
+      handleSuccess(result.message || "Signup successful");
+      setTimeout(() => navigate("/login"), 1000);
+    } else {
+      handleError(result.message || "Signup failed");
+    }
+  } catch (err) {
+    handleError("Error during signup");
+  }
+};
+
+  // Input change handler
   const handleChange = (e) => {
     const { name, value } = e.target;
-    const copySignupInfo = { ...signupInfo };
-    copySignupInfo[name] = value;
-    setSignupInfo(copySignupInfo);
+    setSignupInfo(prev => ({ ...prev, [name]: value }));
   };
 
   return (
@@ -68,72 +118,99 @@ export default function Signup() {
       <Header />
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="bg-white shadow-lg rounded-2xl w-full max-w-md p-8 min-h-[520px]">
-          <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">
-            Sign Up
-          </h2>
+          <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">Sign Up</h2>
 
           <div className="flex mb-6">
-            <Link
-              to="/login"
-              className="flex-1 text-center py-2 bg-gray-100 rounded-l-xl hover:bg-gray-200 transition"
-            >
-              Login
-            </Link>
-            <button className="flex-1 py-2 rounded-r-xl text-white bg-blue-700 font-semibold">
-              Signup
-            </button>
+            <Link to="/login" className="flex-1 text-center py-2 bg-gray-100 rounded-l-xl hover:bg-gray-200 transition">Login</Link>
+            <button className="flex-1 py-2 rounded-r-xl text-white bg-blue-700 font-semibold">Signup</button>
           </div>
 
           <form onSubmit={handleSignup}>
-            {/* Username Field */}
+            {/* Name */}
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Username
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Username</label>
               <input
                 onChange={handleChange}
                 name="name"
                 type="text"
                 placeholder="Enter your name"
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600 transition placeholder-gray-400"
+                className="w-full border border-gray-300 rounded-lg px-4 py-2"
                 value={signupInfo.name}
+                disabled={otpSent}
               />
             </div>
 
-            {/* Email Field */}
+            {/* Roll No */}
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Email Address
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Roll No</label>
               <input
                 onChange={handleChange}
-                name="email"
-                type="email"
-                placeholder="example@domain.com"
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600 transition placeholder-gray-400"
-                value={signupInfo.email}
+                name="rollNo"
+                type="text"
+                placeholder="Enter your Roll No"
+                className="w-full border border-gray-300 rounded-lg px-4 py-2"
+                value={signupInfo.rollNo}
+                disabled={otpSent}
               />
             </div>
 
-            {/* Password Field */}
-            <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Password
-              </label>
+            {/* Password */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
               <input
                 onChange={handleChange}
                 name="password"
                 type="password"
                 placeholder="Create a password"
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600 transition placeholder-gray-400"
+                className="w-full border border-gray-300 rounded-lg px-4 py-2"
                 value={signupInfo.password}
+                disabled={otpSent}
               />
             </div>
 
-            {/* Submit Button */}
+            {/* Confirm Password */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
+              <input
+                onChange={handleChange}
+                name="confirmPassword"
+                type="password"
+                placeholder="Confirm your password"
+                className="w-full border border-gray-300 rounded-lg px-4 py-2"
+                value={signupInfo.confirmPassword}
+                disabled={otpSent}
+              />
+            </div>
+
+            {/* OTP */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-1">OTP Verification</label>
+              <div className="flex gap-2">
+                <input
+                  onChange={handleChange}
+                  name="otp"
+                  type="text"
+                  placeholder="Enter OTP"
+                  className="flex-1 border border-gray-300 rounded-lg px-4 py-2"
+                  value={signupInfo.otp}
+                  disabled={!otpSent || otpVerified}
+                />
+                <button
+                  type="button"
+                  onClick={otpSent ? verifyOTP : sendOTP}
+                  className="bg-blue-600 text-white px-4 py-2 rounded-lg"
+                  disabled={otpVerified}
+                >
+                  {otpSent ? (otpVerified ? "Verified" : "Verify OTP") : "Send OTP"}
+                </button>
+              </div>
+            </div>
+
+            {/* Signup Button */}
             <button
               type="submit"
-              className="bg-gradient-to-r from-blue-900 to-blue-600 text-white py-2 px-4 w-full rounded-lg hover:opacity-90 transition"
+              className="bg-gradient-to-r from-blue-900 to-blue-600 text-white py-2 px-4 w-full rounded-lg"
+              disabled={!otpVerified}
             >
               Create Account
             </button>
@@ -141,15 +218,9 @@ export default function Signup() {
 
           <p className="text-center text-sm mt-6 text-gray-600">
             Already have an account?{" "}
-            <Link
-              to="/login"
-              className="text-blue-600 font-medium hover:underline"
-            >
-              Login
-            </Link>
+            <Link to="/login" className="text-blue-600 font-medium hover:underline">Login</Link>
           </p>
         </div>
-
         <ToastContainer />
       </div>
     </>
