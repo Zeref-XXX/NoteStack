@@ -5,7 +5,8 @@ import { ToastContainer } from "react-toastify";
 import Header from './Header';
 
 // const API_BASE_URL = "http://localhost:3000";
- const API_BASE_URL =  process.env.BACKEND;  
+//  const API_BASE_URL =  process.env.BACKEND;  
+
 
 export default function Signup() {
   const [signupInfo, setSignupInfo] = useState({
@@ -32,7 +33,7 @@ export default function Signup() {
     }
 
     try {
-      const response = await fetch(`${API_BASE_URL}/auth/send-otp`, {
+      const response = await fetch(`https://note-stack-backend-git-main-abhijeets-projects-f129253a.vercel.app/auth/send-otp`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, rollNo, password })
@@ -41,7 +42,7 @@ export default function Signup() {
       const result = await response.json();
       if (result.success) {
         setOtpSent(true);
-        handleSuccess("OTP sent successfully");
+        handleSuccess("OTP sent successfully 0_0");
       } else {
         handleError(result.message || "Failed to send OTP");
       }
