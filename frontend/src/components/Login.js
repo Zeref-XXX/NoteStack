@@ -5,9 +5,6 @@ import { ToastContainer } from "react-toastify";
 import Header from './Header';
 
 
-
-// const API_BASE_URL = "http://localhost:3000" 
-
 const API_BASE_URL = process.env.BACKEND; 
 
 const furl=`${API_BASE_URL}/auth/login`;
@@ -152,5 +149,3 @@ export default function Login() {
     </>
   );
 }
-
-

@@ -10,7 +10,7 @@ const action = require('./Routes/Actions');
 // --- Middleware Setup ---
 
 // 1. CORS Configuration (using an environment variable for production)
-const allowedOrigins = ['localhost:1234'];
+const allowedOrigins = ['https://note-stack-front.vercel.app'];
 if (process.env.FRONTEND_URL) {
   allowedOrigins.push(process.env.FRONTEND_URL);
 }
