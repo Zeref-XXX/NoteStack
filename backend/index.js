@@ -23,8 +23,7 @@ const corsOptions = {
   optionsSuccessStatus: 200 // For legacy browser support
 };
 
- app.use(cors(corsOptions));
-app.options("*", cors(corsOptions));   // <-- add this
+app.use(cors(corsOptions));
 
 // 2. Body Parser Middleware (modern way)
 app.use(express.json());
