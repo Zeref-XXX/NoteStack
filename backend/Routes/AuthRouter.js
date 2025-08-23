@@ -3,6 +3,13 @@ const { signupValidation, loginValidation } = require('../Middleware/AuthValidat
 
 const router = require('express').Router();
  
+router.options("/send-otp", (req, res) => {
+  res.setHeader("Access-Control-Allow-Origin", "https://note-stack-front.vercel.app");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  return res.sendStatus(200);
+});
+
 router.post('/signup', signup)
 router.post('/login', loginValidation, login)
 router.post('/user', data)
