@@ -96,6 +96,7 @@ const otpStore = new Map(); // temp store (better: Redis or DB)
 
 const sendOtp = async (req, res) => {
   try {
+    console.log("inside senotp")
     const { rollNo, name, password } = req.body;
     const email = rollNo + "@nitjsr.ac.in";
 
