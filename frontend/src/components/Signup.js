@@ -4,7 +4,7 @@ import { handleError, handleSuccess } from "../utils";
 import { ToastContainer } from "react-toastify";
 import Header from './Header';
 
-// const API_BASE_URL = "http://localhost:3000";
+const API_BASE_URL = "https://note-stack-frontend.vercel.app";
 //  const API_BASE_URL =  process.env.BACKEND;  
 
 
@@ -33,7 +33,7 @@ export default function Signup() {
     }
 
     try {
-      const response = await fetch(`https://note-stack-backend-git-main-abhijeets-projects-f129253a.vercel.app/auth/send-otp`, {
+      const response = await fetch(`${API_BASE_URL}/auth/send-otp`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, rollNo, password })
