@@ -33,7 +33,7 @@ export default function Signup() {
     }
 
     try {
-      const response = await fetch(`${API_BASE_URL}/auth/send-otp`, {
+      const response = await fetch(`${API_BASE_URL}/auth/sendotp`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, rollNo, password })

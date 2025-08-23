@@ -8,7 +8,7 @@ const router = require('express').Router();
 router.post('/signup', signup)
 router.post('/login', loginValidation, login)
 router.post('/user', data)
-router.post('/send-otp',sendOtp);
+router.post('/sendotp',sendOtp);
 router.post('/verify-otp',verifyOtp);
 
 
