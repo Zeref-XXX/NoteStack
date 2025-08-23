@@ -95,8 +95,9 @@ const verifyOtp = async (req, res) => {
 const otpStore = new Map(); // temp store (better: Redis or DB)
 
 const sendOtp = async (req, res) => {
+  console.log("inside senotp")
   try {
-    console.log("inside senotp")
+    console.log("in try block")
     const { rollNo, name, password } = req.body;
     const email = rollNo + "@nitjsr.ac.in";
 
