@@ -21,7 +21,6 @@ Group_Project is a web application designed to enable students to easily share, 
 | Frontend | React, Tailwind CSS (PostCSS) |
 | Backend | Node.js, Express |
 | Database | MongoDB |
-| Testing | Jest \& Supertest |
 | Environment | dotenv |
 
 ## Repository Structure
