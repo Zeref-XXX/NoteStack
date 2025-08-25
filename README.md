@@ -56,8 +56,8 @@ Group_Project/
 1. **Clone the repository**
 
 ```bash
-git clone https://github.com/Zeref-XXX/Group_Project.git
-cd Group_Project
+git clone https://github.com/Zeref-XXX/NoteStack.git
+cd NoteStack
 ```
 
 2. **Configure environment variables**
@@ -127,33 +127,33 @@ For questions or feedback, please open an issue on GitHub or contact the maintai
 
 <div style="text-align: center">⁂</div>
 
-[^1]: https://github.com/Zeref-XXX/Group_Project
+[^1]: https://github.com/Zeref-XXX/NoteStack
 
-[^2]: https://github.com/Zeref-XXX/Group_Project/tree/main/backend
+[^2]: https://github.com/Zeref-XXX/Group_Project/tree/main/back
 
 [^3]: https://github.com/Zeref-XXX/Group_Project/tree/main/frontend
 
-[^4]: https://github.com/Zeref-XXX/Group_Project/tree/main/backend/Actions
+[^4]: https://github.com/Zeref-XXX/Group_Project/tree/main/back/Actions
 
-[^5]: https://github.com/Zeref-XXX/Group_Project/tree/main/backend/Middleware
+[^5]: https://github.com/Zeref-XXX/Group_Project/tree/main/back/Middleware
 
-[^6]: https://github.com/Zeref-XXX/Group_Project/tree/main/backend/Routes
+[^6]: https://github.com/Zeref-XXX/Group_Project/tree/main/back/Routes
 
-[^7]: https://github.com/Zeref-XXX/Group_Project/tree/main/backend/controller
+[^7]: https://github.com/Zeref-XXX/Group_Project/tree/main/back/controller
 
-[^8]: https://github.com/Zeref-XXX/Group_Project/tree/main/backend/models
+[^8]: https://github.com/Zeref-XXX/Group_Project/tree/main/back/models
 
-[^9]: https://github.com/Zeref-XXX/Group_Project/blob/main/backend/.env
+[^9]: https://github.com/Zeref-XXX/Group_Project/blob/main/back/.env
 
-[^10]: https://github.com/Zeref-XXX/Group_Project/blob/main/backend/.gitignore
+[^10]: https://github.com/Zeref-XXX/Group_Project/blob/main/back/.gitignore
 
-[^11]: https://github.com/Zeref-XXX/Group_Project/blob/main/backend/index.js
+[^11]: https://github.com/Zeref-XXX/Group_Project/blob/main/back/index.js
 
-[^12]: https://github.com/Zeref-XXX/Group_Project/blob/main/backend/package-lock.json
+[^12]: https://github.com/Zeref-XXX/Group_Project/blob/main/back/package-lock.json
 
-[^13]: https://github.com/Zeref-XXX/Group_Project/blob/main/backend/package.json
+[^13]: https://github.com/Zeref-XXX/Group_Project/blob/main/back/package.json
 
-[^14]: https://github.com/Zeref-XXX/Group_Project/blob/main/backend/test
+[^14]: https://github.com/Zeref-XXX/Group_Project/blob/main/back/test
 
 [^15]: https://github.com/Zeref-XXX/Group_Project/tree/main/frontend/src
 
