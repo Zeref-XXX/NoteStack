@@ -6,12 +6,6 @@
 
 # Ignore all dist folders
 **/dist/
-
+.env
 ./package-lock.json
- 
-node_modules/ 
-dist/
-.parcel-cache/
-.env  
-.vscode/
-.idea/
+

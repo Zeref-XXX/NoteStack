@@ -4,9 +4,7 @@ import { handleError, handleSuccess } from "../utils";
 import { ToastContainer } from "react-toastify";
 import Header from './Header';
 
-const API_BASE_URL = "https://note-stack-frontend.vercel.app";
-//  const API_BASE_URL =  process.env.BACKEND;  
-
+const API_BASE_URL = "https://note-stack-group.vercel.app"; // Changed to HTTP
 
 export default function Signup() {
   const [signupInfo, setSignupInfo] = useState({
@@ -19,6 +17,7 @@ export default function Signup() {
   
   const [otpSent, setOtpSent] = useState(false);
   const [otpVerified, setOtpVerified] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   // Send OTP
@@ -32,22 +31,26 @@ export default function Signup() {
       return handleError("Passwords do not match");
     }
 
+    setLoading(true);
     try {
-      const response = await fetch(`${API_BASE_URL}/auth/sendotp`, {
+      const response = await fetch(`${API_BASE_URL}/auth/send-otp`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, rollNo, password })
       });
       
       const result = await response.json();
-      if (result.success) {
+      if (response.ok && result.success) {
         setOtpSent(true);
-        handleSuccess("OTP sent successfully 0_0");
+        handleSuccess("OTP sent successfully");
       } else {
         handleError(result.message || "Failed to send OTP");
       }
     } catch (err) {
-      handleError("Error sending OTP");
+      handleError("Error sending OTP. Check your connection.");
+      console.error("Send OTP error:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -55,16 +58,23 @@ export default function Signup() {
   const verifyOTP = async () => {
     const { rollNo, otp } = signupInfo;
     if (!otp) return handleError("Please enter OTP");
+    if (otp.length !== 6) return handleError("OTP must be 6 digits");
 
+    setLoading(true);
     try {
       const response = await fetch(`${API_BASE_URL}/auth/verify-otp`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ rollNo, otp })
+        body: JSON.stringify({ 
+          rollNo: rollNo, 
+          otp: otp 
+        })
       });
       
       const result = await response.json();
-      if (result.success) {
+      console.log("Verify OTP result:", result);
+      
+      if (response.ok && result.success) {
         setOtpVerified(true);
         handleSuccess("OTP verified successfully");
       } else {
@@ -72,42 +82,49 @@ export default function Signup() {
       }
     } catch (err) {
       handleError("Error verifying OTP");
+      console.error("Verify OTP error:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
   // Final Signup
-const handleSignup = async (e) => {
-  e.preventDefault();
-  const { name, rollNo, password, confirmPassword } = signupInfo;
+  const handleSignup = async (e) => {
+    e.preventDefault();
+    const { name, rollNo, password, confirmPassword } = signupInfo;
 
-  if (!name || !rollNo || !password || !confirmPassword) {
-    return handleError("All fields are required");
-  }
-  if (password !== confirmPassword) {
-    return handleError("Passwords do not match");
-  }
-  if (!otpVerified) {
-    return handleError("Please verify your OTP first");
-  }
-
-  try {
-    const response = await fetch(`${API_BASE_URL}/auth/signup`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, rollNo, password })
-    });
-
-    const result = await response.json();
-    if (result.success) {
-      handleSuccess(result.message || "Signup successful");
-      setTimeout(() => navigate("/login"), 1000);
-    } else {
-      handleError(result.message || "Signup failed");
+    if (!name || !rollNo || !password || !confirmPassword) {
+      return handleError("All fields are required");
     }
-  } catch (err) {
-    handleError("Error during signup");
-  }
-};
+    if (password !== confirmPassword) {
+      return handleError("Passwords do not match");
+    }
+    if (!otpVerified) {
+      return handleError("Please verify your OTP first");
+    }
+
+    setLoading(true);
+    try {
+      const response = await fetch(`${API_BASE_URL}/auth/signup`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, rollNo, password })
+      });
+
+      const result = await response.json();
+      if (response.ok && result.success) {
+        handleSuccess(result.message || "Signup successful");
+        setTimeout(() => navigate("/login"), 1000);
+      } else {
+        handleError(result.message || "Signup failed");
+      }
+    } catch (err) {
+      handleError("Error during signup");
+      console.error("Signup error:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Input change handler
   const handleChange = (e) => {
@@ -118,13 +135,20 @@ const handleSignup = async (e) => {
   return (
     <>
       <Header />
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 py-8">
         <div className="bg-white shadow-lg rounded-2xl w-full max-w-md p-8 min-h-[520px]">
           <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">Sign Up</h2>
 
           <div className="flex mb-6">
-            <Link to="/login" className="flex-1 text-center py-2 bg-gray-100 rounded-l-xl hover:bg-gray-200 transition">Login</Link>
-            <button className="flex-1 py-2 rounded-r-xl text-white bg-blue-700 font-semibold">Signup</button>
+            <Link 
+              to="/login" 
+              className="flex-1 text-center py-2 bg-gray-100 rounded-l-xl hover:bg-gray-200 transition"
+            >
+              Login
+            </Link>
+            <button className="flex-1 py-2 rounded-r-xl text-white bg-blue-700 font-semibold cursor-default">
+              Signup
+            </button>
           </div>
 
           <form onSubmit={handleSignup}>
@@ -136,9 +160,10 @@ const handleSignup = async (e) => {
                 name="name"
                 type="text"
                 placeholder="Enter your name"
-                className="w-full border border-gray-300 rounded-lg px-4 py-2"
+                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 value={signupInfo.name}
-                disabled={otpSent}
+                disabled={otpSent || loading}
+                required
               />
             </div>
 
@@ -150,9 +175,10 @@ const handleSignup = async (e) => {
                 name="rollNo"
                 type="text"
                 placeholder="Enter your Roll No"
-                className="w-full border border-gray-300 rounded-lg px-4 py-2"
+                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 value={signupInfo.rollNo}
-                disabled={otpSent}
+                disabled={otpSent || loading}
+                required
               />
             </div>
 
@@ -164,9 +190,11 @@ const handleSignup = async (e) => {
                 name="password"
                 type="password"
                 placeholder="Create a password"
-                className="w-full border border-gray-300 rounded-lg px-4 py-2"
+                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 value={signupInfo.password}
-                disabled={otpSent}
+                disabled={otpSent || loading}
+                required
+                minLength={6}
               />
             </div>
 
@@ -178,32 +206,36 @@ const handleSignup = async (e) => {
                 name="confirmPassword"
                 type="password"
                 placeholder="Confirm your password"
-                className="w-full border border-gray-300 rounded-lg px-4 py-2"
+                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 value={signupInfo.confirmPassword}
-                disabled={otpSent}
+                disabled={otpSent || loading}
+                required
               />
             </div>
 
             {/* OTP */}
-            <div className="mb-4">
+            <div className="mb-6">
               <label className="block text-sm font-medium text-gray-700 mb-1">OTP Verification</label>
               <div className="flex gap-2">
                 <input
                   onChange={handleChange}
                   name="otp"
                   type="text"
-                  placeholder="Enter OTP"
-                  className="flex-1 border border-gray-300 rounded-lg px-4 py-2"
+                  placeholder="Enter 6-digit OTP"
+                  className="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   value={signupInfo.otp}
-                  disabled={!otpSent || otpVerified}
+                  disabled={!otpSent || otpVerified || loading}
+                  maxLength={6}
+                  pattern="\d{6}"
+                  required
                 />
                 <button
                   type="button"
                   onClick={otpSent ? verifyOTP : sendOTP}
-                  className="bg-blue-600 text-white px-4 py-2 rounded-lg"
-                  disabled={otpVerified}
+                  className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed min-w-[100px]"
+                  disabled={loading || otpVerified}
                 >
-                  {otpSent ? (otpVerified ? "Verified" : "Verify OTP") : "Send OTP"}
+                  {loading ? "..." : otpSent ? (otpVerified ? "Verified" : "Verify OTP") : "Send OTP"}
                 </button>
               </div>
             </div>
@@ -211,10 +243,10 @@ const handleSignup = async (e) => {
             {/* Signup Button */}
             <button
               type="submit"
-              className="bg-gradient-to-r from-blue-900 to-blue-600 text-white py-2 px-4 w-full rounded-lg"
-              disabled={!otpVerified}
+              className="bg-gradient-to-r from-blue-900 to-blue-600 text-white py-2 px-4 w-full rounded-lg hover:from-blue-800 hover:to-blue-700 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed"
+              disabled={!otpVerified || loading}
             >
-              Create Account
+              {loading ? "Creating Account..." : "Create Account"}
             </button>
           </form>
 
@@ -228,5 +260,3 @@ const handleSignup = async (e) => {
     </>
   );
 }
-
-

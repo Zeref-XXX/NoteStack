@@ -5,8 +5,8 @@ import { ToastContainer } from "react-toastify";
 import Header from './Header';
 
 
-const API_BASE_URL = process.env.BACKEND; 
 
+const API_BASE_URL = "https://note-stack-group.vercel.app" 
 const furl=`${API_BASE_URL}/auth/login`;
 
 export default function Login() {
