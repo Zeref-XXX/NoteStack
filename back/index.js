@@ -8,7 +8,7 @@ const action = require('./Routes/Actions');
 app.use(express.json());
 
 app.use(cors({
-    origin: 'https://note-stack-group-zb68.vercel.app',
+    origin: 'http://localhost:1234',
     credentials: true 
 }))
 

@@ -6,7 +6,7 @@ import Header from './Header';
 
 
 
-const API_BASE_URL = "https://note-stack-group.vercel.app" 
+const API_BASE_URL = process.env.BACKEND;
 const furl=`${API_BASE_URL}/auth/login`;
 
 export default function Login() {

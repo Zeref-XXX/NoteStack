@@ -4,7 +4,7 @@ import { handleError, handleSuccess } from "../utils";
 import { ToastContainer } from "react-toastify";
 import Header from './Header';
 
-const API_BASE_URL = "https://note-stack-group.vercel.app"; // Changed to HTTP
+const API_BASE_URL = process.env.BACKEND; // Changed to HTTP
 
 export default function Signup() {
   const [signupInfo, setSignupInfo] = useState({
