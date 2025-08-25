@@ -132,7 +132,7 @@ export default function Login() {
           </button>
         </form>
 
-        {/* Redirect */}
+        {/* Re  direct */}
         <p className="text-center text-sm mt-6 text-gray-600">
           Don't have an account?{" "}
           <Link
