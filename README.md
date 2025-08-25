@@ -28,7 +28,7 @@ Group_Project is a web application designed to enable students to easily share, 
 ```
 Group_Project/
 │
-├── backend/                # Server-side code
+├── back/                # Server-side code
 │   ├── Actions/            # Business logic modules
 │   ├── Middleware/         # Auth and error handlers
 │   ├── Routes/             # API endpoint definitions
@@ -60,7 +60,7 @@ cd NoteStack
 ```
 
 2. **Configure environment variables**
-In `backend/.env`, set:
+In `back/.env`, set:
 
 ```
 MONGO_URI=<your MongoDB connection string>
@@ -71,7 +71,7 @@ JWT_SECRET=<your JWT secret>
 
 ```bash
 # Backend
-cd backend
+cd back
 npm install
 
 # Frontend
@@ -84,7 +84,7 @@ In separate terminals:
 
 ```bash
 # Start backend (port 5000)
-cd backend
+cd back
 npm start
 
 # Start frontend (port 3000)
@@ -95,16 +95,7 @@ npm start
 5. **Access the app**
 Open http://localhost:3000 in your browser.
 
-## Testing
-
-- **Backend tests** are written with Jest and Supertest.
-
-```bash
-cd backend
-npm test
-```
-
-
+ 
 ## Usage
 
 1. Sign up for an account or log in if you already have one.
