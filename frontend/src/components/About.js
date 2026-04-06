@@ -1,4 +1,5 @@
 import Header from "./Header";
+import ForkTracker from "./ForkTracker";
 
 const About = () => {
   return (
@@ -18,6 +19,11 @@ const About = () => {
             to ask, or love sharing knowledge. NoteStack is a space where
             everyone can thrive academically through collaboration.
           </p>
+        </section>
+
+        {/* GitHub Community Stats */}
+        <section className="max-w-4xl mx-auto">
+          <ForkTracker />
         </section>
 
         {/* What is NoteStack */}
